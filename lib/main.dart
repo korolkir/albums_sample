@@ -1,6 +1,8 @@
+import 'package:albums_sample/common/di/get_it_configuration.dart';
 import 'package:flutter/material.dart';
 
 void main() {
+  configureDependencies();
   runApp(const MyApp());
 }
 
