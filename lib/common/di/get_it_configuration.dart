@@ -1,3 +1,4 @@
+import 'package:albums_sample/features/album_list/blocs/album_list_bloc_settings.dart';
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
@@ -21,4 +22,8 @@ abstract class RegisterModule {
           baseUrl: 'https://itunes.apple.com',
         ),
       );
+
+  @injectable
+  AlbumListBlocSettings get albumListBlocSettings =>
+      const AlbumListBlocSettings(itemsAmountPerPage: 10);
 }
