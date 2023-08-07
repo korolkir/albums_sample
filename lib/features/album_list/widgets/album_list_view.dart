@@ -4,9 +4,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../blocs/album_list_bloc.dart';
 import '../blocs/album_list_event.dart';
 import '../blocs/album_list_state.dart';
-import '../models/album.dart';
+import 'album_list_error_widget.dart';
+import 'album_list_loading_widget.dart';
 import 'album_list_tile.dart';
-import 'albums_loading_status.dart';
 
 class AlbumListView extends StatefulWidget {
   const AlbumListView({super.key});
@@ -17,7 +17,6 @@ class AlbumListView extends StatefulWidget {
 
 class _AlbumListViewState extends State<AlbumListView> {
   final ScrollController _scrollController = ScrollController();
-  List<Album> _albums = List.empty();
 
   @override
   void initState() {
@@ -27,45 +26,41 @@ class _AlbumListViewState extends State<AlbumListView> {
 
   @override
   void dispose() {
-    _removeListener();
-    _scrollController.dispose();
+    _scrollController
+      ..removeListener(_scrollListener)
+      ..dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<AlbumListBloc, AlbumListState>(
-      listenWhen: (_, state) => state is AlbumsLoaded || state is Error,
-      listener: (_, state) => switch (state) {
-        AlbumsLoaded(:final albums, :final canLoadMore) =>
-          _onItemsLoaded(albums, canLoadMore),
-        Error() => _removeListener(),
-        _ => null
+    return BlocBuilder<AlbumListBloc, AlbumListState>(
+      builder: (_, state) {
+        if (state.status.isInitial) {
+          return const AlbumListLoadingWidget();
+        } else if (state.status.isSuccess && state.albums.isEmpty) {
+          return const Center(child: Text('No albums'));
+        } else if (state.status.isError && state.albums.isEmpty) {
+          return const AlbumListErrorWidget();
+        } else {
+          return ListView.separated(
+            controller: _scrollController,
+            itemCount: state.canLoadMore
+                ? state.albums.length + 1
+                : state.albums.length,
+            separatorBuilder: (_, __) => const Divider(),
+            itemBuilder: (_, index) {
+              if (index == state.albums.length) {
+                return state.status.isError
+                    ? const AlbumListErrorWidget()
+                    : const AlbumListLoadingWidget();
+              }
+              return AlbumListTile(album: state.albums[index]);
+            },
+          );
+        }
       },
-      builder: (_, state) => _albums.isEmpty
-          ? const AlbumsLoadingStatus()
-          : ListView.separated(
-              controller: _scrollController,
-              itemCount: _getItemsCount(state),
-              separatorBuilder: (_, __) => const Divider(),
-              itemBuilder: (_, index) => index == _albums.length
-                  ? const AlbumsLoadingStatus()
-                  : AlbumListTile(album: _albums[index]),
-            ),
     );
-  }
-
-  void _removeListener() {
-    _scrollController.removeListener(_scrollListener);
-  }
-
-  void _onItemsLoaded(List<Album> albums, bool canLoadMore) {
-    setState(() {
-      _albums = albums;
-    });
-    if (!canLoadMore) {
-      _removeListener();
-    }
   }
 
   void _scrollListener() {
@@ -75,12 +70,5 @@ class _AlbumListViewState extends State<AlbumListView> {
     if (currentScroll >= maxScroll * 0.9) {
       context.read<AlbumListBloc>().add(const LoadAlbumListEvent());
     }
-  }
-
-  int _getItemsCount(AlbumListState state) {
-    if (state is AlbumsLoaded && !state.canLoadMore) {
-      return _albums.length;
-    }
-    return _albums.length + 1;
   }
 }

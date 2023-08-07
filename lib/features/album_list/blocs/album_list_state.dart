@@ -2,27 +2,39 @@ import 'package:equatable/equatable.dart';
 
 import '../models/album.dart';
 
-sealed class AlbumListState extends Equatable {
-  const AlbumListState();
+enum AlbumListStatus {
+  initial,
+  success,
+  error;
 
-  @override
-  List<Object?> get props => [];
+  bool get isInitial => this == AlbumListStatus.initial;
+  bool get isSuccess => this == AlbumListStatus.success;
+  bool get isError => this == AlbumListStatus.error;
 }
 
-final class AlbumsLoaded extends AlbumListState {
+final class AlbumListState extends Equatable {
+  const AlbumListState({
+    this.status = AlbumListStatus.initial,
+    this.albums = const [],
+    this.canLoadMore = true,
+  });
+
+  final AlbumListStatus status;
   final List<Album> albums;
   final bool canLoadMore;
 
-  const AlbumsLoaded({required this.albums, required this.canLoadMore});
+  AlbumListState copyWith({
+    AlbumListStatus? status,
+    List<Album>? albums,
+    bool? canLoadMore,
+  }) {
+    return AlbumListState(
+      status: status ?? this.status,
+      albums: albums ?? this.albums,
+      canLoadMore: canLoadMore ?? this.canLoadMore,
+    );
+  }
 
   @override
-  List<Object?> get props => [albums, canLoadMore];
-}
-
-final class Error extends AlbumListState {
-  const Error();
-}
-
-final class Loading extends AlbumListState {
-  const Loading();
+  List<Object?> get props => [status, albums, canLoadMore];
 }

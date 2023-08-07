@@ -20,7 +20,7 @@ class AlbumListBloc extends Bloc<LoadAlbumListEvent, AlbumListState> {
     required AlbumListBlocSettings settings,
   })  : _albumsRepository = albumsRepository,
         _settings = settings,
-        super(const AlbumsLoaded(albums: [], canLoadMore: true)) {
+        super(const AlbumListState()) {
     on<LoadAlbumListEvent>(_loadAlbumList, transformer: droppable());
   }
 
@@ -30,17 +30,24 @@ class AlbumListBloc extends Bloc<LoadAlbumListEvent, AlbumListState> {
     LoadAlbumListEvent event,
     Emitter<AlbumListState> emit,
   ) async {
-    emit(const Loading());
-    try {
-      final albums = await _albumsRepository.getAlbumList(_currentLimit);
-      final isEndOfList = albums.length < _currentLimit;
-      emit(AlbumsLoaded(albums: albums, canLoadMore: !isEndOfList));
-      if (!isEndOfList) {
-        _currentPage++;
+    if (state.canLoadMore) {
+      try {
+        final albums = await _albumsRepository.getAlbumList(_currentLimit);
+        final isEndOfList = albums.length < _currentLimit;
+        emit(
+          state.copyWith(
+            status: AlbumListStatus.success,
+            albums: albums,
+            canLoadMore: !isEndOfList,
+          ),
+        );
+        if (!isEndOfList) {
+          _currentPage++;
+        }
+      } catch (error, stackTrace) {
+        emit(state.copyWith(status: AlbumListStatus.error));
+        addError(error, stackTrace);
       }
-    } catch (error, stackTrace) {
-      emit(const Error());
-      addError(error, stackTrace);
     }
   }
 }

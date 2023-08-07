@@ -17,7 +17,7 @@ void main() {
 
   setUpAll(() async {
     mockAlbumsBlock = MockAlbumListBloc();
-    when(() => mockAlbumsBlock.state).thenReturn(const Loading());
+    when(() => mockAlbumsBlock.state).thenReturn(const AlbumListState());
     GetIt.instance.registerFactory<AlbumListBloc>(() => mockAlbumsBlock);
   });
 
