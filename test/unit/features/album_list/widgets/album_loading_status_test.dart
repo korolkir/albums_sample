@@ -12,11 +12,11 @@ class MockAlbumListBloc extends MockBloc<LoadAlbumListEvent, AlbumListState>
     implements AlbumListBloc {}
 
 extension on WidgetTester {
-  Future<void> pumpAlbumsLoadingStatus(AlbumListBloc postBloc) {
+  Future<void> pumpAlbumsLoadingStatus(AlbumListBloc albumsBloc) {
     return pumpWidget(
       MaterialApp(
         home: BlocProvider.value(
-          value: postBloc,
+          value: albumsBloc,
           child: const Material(child: AlbumsLoadingStatus()),
         ),
       ),
@@ -43,6 +43,20 @@ void main() {
 
       // Verify that the CircularProgressIndicator is not displayed.
       expect(find.byType(CircularProgressIndicator), findsNothing);
+    },
+  );
+
+  testWidgets(
+    'When Error widget button is clicked Then add ',
+    (WidgetTester tester) async {
+      when(() => albumsBloc.state).thenReturn(const Error());
+
+      await tester.pumpAlbumsLoadingStatus(albumsBloc);
+
+      await tester.tap(find.byType(IconButton));
+
+      // Verify that the LoadAlbumListEvent is added.
+      verify(() => albumsBloc.add(const LoadAlbumListEvent())).called(1);
     },
   );
 
