@@ -5,7 +5,7 @@
   -- 1. artworkUrl100 - Leading thumbnail
   -- 2. collectionName - Title
   -- 3. currency & collectionPrice - Subtitle
-  -- 4. Favourite icon/button - A trailing button for favouriting an album.
+  -- 4. Favorite icon/button - A trailing button for "favoriting" an album.
 
 > The favorite state of an album should be stored ephemerally. This means that when you restart
-> the app the albums favourite states will be lost.
+> the app the albums favorite states will be lost.

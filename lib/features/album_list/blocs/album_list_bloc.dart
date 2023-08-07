@@ -10,7 +10,7 @@ import 'album_list_event.dart';
 import 'album_list_state.dart';
 
 @injectable
-class AlbumListBloc extends Bloc<LoadAlbumListEvent, AlbumListState> {
+class AlbumListBloc extends Bloc<AlbumListEvent, AlbumListState> {
   final AlbumListBlocSettings _settings;
   final AlbumListRepository _albumsRepository;
   var _currentPage = 0;
@@ -22,6 +22,7 @@ class AlbumListBloc extends Bloc<LoadAlbumListEvent, AlbumListState> {
         _settings = settings,
         super(const AlbumListState()) {
     on<LoadAlbumListEvent>(_loadAlbumList, transformer: droppable());
+    on<ToggleFavoriteAlbumEvent>(_toggleFavoriteAlbum);
   }
 
   int get _currentLimit => (_currentPage + 1) * _settings.itemsAmountPerPage;
@@ -49,5 +50,19 @@ class AlbumListBloc extends Bloc<LoadAlbumListEvent, AlbumListState> {
         addError(error, stackTrace);
       }
     }
+  }
+
+  FutureOr<void> _toggleFavoriteAlbum(
+    ToggleFavoriteAlbumEvent event,
+    Emitter<AlbumListState> emit,
+  ) {
+    final index = event.index;
+    final favoriteAlbums = Set.of(state.favoriteAlbums);
+    if (favoriteAlbums.contains(index)) {
+      favoriteAlbums.remove(index);
+    } else {
+      favoriteAlbums.add(index);
+    }
+    emit(state.copyWith(favoriteAlbums: favoriteAlbums));
   }
 }

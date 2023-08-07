@@ -12,11 +12,12 @@ class MockAlbumListRepository extends Mock implements AlbumListRepository {}
 
 void main() {
   group(
-    'AlbumListBloc',
+    'AlbumListBloc Tests',
     () {
       late AlbumListBloc bloc;
       late MockAlbumListRepository mockRepository;
       const itemsPerPage = 3;
+      const favoriteAlbumIndex = 5;
 
       setUp(() {
         mockRepository = MockAlbumListRepository();
@@ -117,6 +118,32 @@ void main() {
             canLoadMore: true,
             status: AlbumListStatus.error,
           )
+        ],
+      );
+
+      blocTest<AlbumListBloc, AlbumListState>(
+        'When ToggleFavoriteAlbumEvent added && album is not favorite '
+        'Then emit favorite albums set with added index',
+        build: () => bloc,
+        act: (bloc) {
+          bloc.add(const ToggleFavoriteAlbumEvent(index: favoriteAlbumIndex));
+        },
+        expect: () => const [
+          AlbumListState(favoriteAlbums: {favoriteAlbumIndex}),
+        ],
+      );
+
+      blocTest<AlbumListBloc, AlbumListState>(
+        'When ToggleFavoriteAlbumEvent added && album is already in favorite list '
+        'Then emit favorite albums set without added index',
+        build: () => bloc
+          ..add(const ToggleFavoriteAlbumEvent(index: favoriteAlbumIndex)),
+        act: (bloc) {
+          bloc.add(const ToggleFavoriteAlbumEvent(index: favoriteAlbumIndex));
+        },
+        skip: 1,
+        expect: () => const [
+          AlbumListState(favoriteAlbums: {}),
         ],
       );
     },

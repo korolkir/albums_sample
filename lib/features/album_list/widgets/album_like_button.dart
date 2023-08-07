@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class LikeButton extends StatelessWidget {
-  const LikeButton({super.key, required this.isLiked, this.onPressed});
+class AlbumLikeButton extends StatelessWidget {
+  const AlbumLikeButton({super.key, required this.isLiked, this.onPressed});
 
   final bool isLiked;
   final VoidCallback? onPressed;

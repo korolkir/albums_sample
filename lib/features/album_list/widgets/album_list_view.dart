@@ -55,7 +55,11 @@ class _AlbumListViewState extends State<AlbumListView> {
                     ? const AlbumListErrorWidget()
                     : const AlbumListLoadingWidget();
               }
-              return AlbumListTile(album: state.albums[index]);
+              return AlbumListTile(
+                album: state.albums[index],
+                index: index,
+                isFavorite: state.favoriteAlbums.contains(index),
+              );
             },
           );
         }

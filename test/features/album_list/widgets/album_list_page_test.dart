@@ -9,7 +9,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 
-class MockAlbumListBloc extends MockBloc<LoadAlbumListEvent, AlbumListState>
+class MockAlbumListBloc extends MockBloc<AlbumListEvent, AlbumListState>
     implements AlbumListBloc {}
 
 void main() {
@@ -21,12 +21,15 @@ void main() {
     GetIt.instance.registerFactory<AlbumListBloc>(() => mockAlbumsBlock);
   });
 
-  testWidgets('AlbumListPage displays correctly', (WidgetTester tester) async {
-    await tester.pumpWidget(const MaterialApp(home: AlbumListPage()));
+  testWidgets(
+    'AlbumListPage displays correctly',
+    (WidgetTester tester) async {
+      await tester.pumpWidget(const MaterialApp(home: AlbumListPage()));
 
-    expect(find.byType(AppBar), findsOneWidget);
-    expect(find.text('Jack Johnson Albums'), findsOneWidget);
+      expect(find.byType(AppBar), findsOneWidget);
+      expect(find.text('Jack Johnson Albums'), findsOneWidget);
 
-    expect(find.byType(AlbumListView), findsOneWidget);
-  });
+      expect(find.byType(AlbumListView), findsOneWidget);
+    },
+  );
 }
