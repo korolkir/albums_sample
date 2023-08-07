@@ -5,7 +5,7 @@ import 'package:albums_sample/features/album_list/mappers/json_to_album_list_map
 import '../test_objects.dart';
 
 void main() {
-  group('JsonToAlbumListMapperImpl', () {
+  group('JsonToAlbumListMapperImpl Tests', () {
     late JsonToAlbumListMapperImpl mapper;
 
     setUp(() {

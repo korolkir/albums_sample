@@ -36,7 +36,7 @@ abstract class TestObjects {
             },
             {
               "wrapperType": "collection",
-              "collectionType": "Album3"
+              "collectionType": "Album"
             }
           ]
         }
