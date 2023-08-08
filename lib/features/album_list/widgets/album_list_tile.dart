@@ -1,8 +1,8 @@
-import 'package:albums_sample/features/album_list/blocs/album_list_bloc.dart';
-import 'package:albums_sample/features/album_list/blocs/album_list_event.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../blocs/album_list_bloc.dart';
+import '../blocs/album_list_event.dart';
 import '../models/album.dart';
 import 'album_like_button.dart';
 

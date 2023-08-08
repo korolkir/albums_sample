@@ -1,10 +1,10 @@
 import 'dart:async';
 
-import 'package:albums_sample/features/album_list/repositories/album_list_repository.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 
+import '../repositories/album_list_repository.dart';
 import 'album_list_bloc_settings.dart';
 import 'album_list_event.dart';
 import 'album_list_state.dart';

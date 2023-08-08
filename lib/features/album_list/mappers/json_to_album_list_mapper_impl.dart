@@ -1,8 +1,8 @@
 import 'dart:convert';
 
-import 'package:albums_sample/features/album_list/models/album.dart';
 import 'package:injectable/injectable.dart';
 
+import '../models/album.dart';
 import '../models/itunes_lookup_response.dart';
 import '../models/itunes_lookup_result_data_model.dart';
 import 'json_to_album_list_mapper.dart';
