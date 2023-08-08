@@ -31,5 +31,6 @@ final class ItunesLookupResultDataModel extends Equatable {
         artworkUrl100,
         collectionPrice,
         currency,
+        collectionType,
       ];
 }
